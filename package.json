@@ -13,10 +13,10 @@
     "source-map": "0.8.0-beta.0"
   },
   "scripts": {
-    "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
-    "test:unit": "test -c jest-unit-config.js --watch",
-    "test:staged": "test --findRelatedTests",
-    "test:ci": "test --silent --coverage "
+    "test": "jest --passWithNoTests --runInBand --no-cache",
+    "test:unit": "npm test -- --watch -c jest-unit-config.js",
+    "test:staged": "npm test -- --findRelatedTests",
+    "test:ci": "npm test -- --coverag"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
