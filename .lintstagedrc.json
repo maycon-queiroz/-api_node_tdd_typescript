@@ -1,0 +1,11 @@
+{
+  "*.js": [
+    "eslint --fix",
+    "git add"
+  ],
+  "*.ts": [
+    "eslint --fix",
+    "cross-env CI=true yarn test --bail",
+    "git add"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "rootDir": "dist",
+    "outDir": "dist",
     "rootDirs": [
       "src",
       "tests"

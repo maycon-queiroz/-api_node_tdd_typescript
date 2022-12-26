@@ -1,14 +1,13 @@
-/*
- * For a detailed explanation regarding each configuration property, visit:
- * https://jestjs.io/docs/configuration
- */
-
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
-	preset: '@shelf/jest-mongodb',
-	// collectCoverage: true,
-	coverageDirectory: 'coverage',
-	testEnvironment: 'node',
-	collectCoverageFrom: ['**/src/**/*.js', '!**/src/main/**'],
-	coverageProvider: 'v8',
-	verbose: true
-};
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  transform: {
+    '.+\\.ts$': 'ts-jest'
+  },
+  moduleNameMapper: {
+    '@/(.*)': '<rootDir>/src/$1',
+    '@/tests/*': '<rootDir>/tests/$1'
+  }
+}
