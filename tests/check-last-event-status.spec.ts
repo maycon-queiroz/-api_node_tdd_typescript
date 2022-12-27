@@ -11,7 +11,7 @@ class CheckLastEventStatus {
     if (event === undefined) return { status: 'done' }
 
     const now = new Date()
-    const status = event.endDate > now ? 'active' : 'inReview'
+    const status = event.endDate >= now ? 'active' : 'inReview'
 
     return { status }
   }
@@ -73,6 +73,17 @@ describe('CheckLastEventStatus', () => {
     const { sut, loadLastEventRepository } = makeSut()
     loadLastEventRepository.output = {
       endDate: new Date(new Date().getTime() + 1)
+    }
+
+    const eventStatus = await sut.perform({ groupId })
+
+    expect(eventStatus.status).toBe('active')
+  })
+
+  it('Should return status active when now is to equal event end time', async () => {
+    const { sut, loadLastEventRepository } = makeSut()
+    loadLastEventRepository.output = {
+      endDate: new Date()
     }
 
     const eventStatus = await sut.perform({ groupId })
