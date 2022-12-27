@@ -11,13 +11,16 @@ class CheckLastEventStatus {
     if (event === undefined) return { status: 'done' }
 
     const now = new Date()
-    const status = event.endDate >= now ? 'active' : 'inReview'
 
-    return { status }
+    if (event.endDate >= now) return { status: 'active' }
+    const reviewDurationInMiliSeconds = event.reviewDurationInHours * 60 * 60 * 1000
+    const reviewDate = new Date(event.endDate.getTime() + reviewDurationInMiliSeconds)
+
+    return reviewDate >= now ? { status: 'inReview' } : { status: 'done' }
   }
 }
 
-type LoadLastReturnRepository = { endDate: Date, reviewDurationInHours?: number } | undefined
+type LoadLastReturnRepository = { endDate: Date, reviewDurationInHours: number } | undefined
 
 interface LoadLastEventRepository {
   loadLastEvent(input: { groupId: string }): Promise<LoadLastReturnRepository>;
@@ -146,5 +149,20 @@ describe('CheckLastEventStatus', () => {
     const EventStatus = await sut.perform({ groupId })
 
     expect(EventStatus.status).toBe('inReview')
+  })
+
+
+  it('Should return status done when now is after event review time', async () => {
+    const reviewDurationInHours = 1
+    const reviewDurationInMiliSeconds = reviewDurationInHours * 60 * 60 * 1000
+    const { sut, loadLastEventRepository } = makeSut()
+    loadLastEventRepository.output = {
+      endDate: new Date(new Date().getTime() - reviewDurationInMiliSeconds - 1),
+      reviewDurationInHours
+    }
+
+    const EventStatus = await sut.perform({ groupId })
+
+    expect(EventStatus.status).toBe('done')
   })
 })
